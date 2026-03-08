@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>NewEnergy Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;700&family=Courier+Prime&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
 <style>
 :root {
   --gold: #b8922a; --gold2: #d4a83c;
@@ -220,10 +222,34 @@ select.inp{cursor:pointer}
 .chk-tog{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.1);cursor:pointer;font-size:11px;letter-spacing:2px;transition:all .18s;background:rgba(255,255,255,.5);color:#8a8270}
 .chk-tog.on-luce{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);color:var(--gold)}
 .chk-tog.on-gas{background:rgba(82,168,122,.1);border-color:rgba(82,168,122,.4);color:var(--green2)}
+
+/* GOOGLE DRIVE SYNC */
+.sync-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.5);border-bottom:1px solid rgba(0,0,0,.07);font-size:10px;color:#445;letter-spacing:1px;flex-shrink:0}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#ccc;flex-shrink:0;transition:background .3s}
+.sync-dot.ok{background:#52a87a}
+.sync-dot.syncing{background:#c9a84c;animation:pulse .8s infinite}
+.sync-dot.err{background:#c05050}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-label{flex:1}
+.sync-btn{background:rgba(74,122,159,.1);color:var(--blue);border:1px solid rgba(74,122,159,.2);border-radius:7px;padding:4px 10px;cursor:pointer;font-size:9px;letter-spacing:1px;font-family:'Courier Prime',monospace}
+.sync-btn:active{opacity:.7}
+.gdrive-login{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(74,122,159,.07);border-bottom:1px solid rgba(0,0,0,.07);font-size:10px;color:#445;flex-shrink:0}
+.gdrive-login-btn{background:linear-gradient(135deg,#4285f4,#357ae8);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:10px;letter-spacing:1px;font-family:'Courier Prime',monospace}
 </style>
 </head>
 <body>
 <div class="app">
+
+<div id="gdrive-login-bar" class="gdrive-login">
+  <span style="flex:1">☁️ Collega Google Drive per salvare i dati sul cloud</span>
+  <button class="gdrive-login-btn" onclick="gdriveLogin()">Accedi</button>
+</div>
+<div id="sync-bar" class="sync-bar" style="display:none">
+  <div class="sync-dot" id="syncDot"></div>
+  <span class="sync-label" id="syncLabel">Google Drive collegato</span>
+  <button class="sync-btn" onclick="syncNow()">↑ Salva ora</button>
+  <button class="sync-btn" onclick="gdriveLogout()" style="background:rgba(192,96,96,.08);color:#c05050;border-color:rgba(192,96,96,.2)">Esci</button>
+</div>
 
 <div class="topbar">
   <div class="tb-brand">
@@ -718,6 +744,138 @@ document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', (
 /* INIT */
 loadData();
 render();
+
+/* GOOGLE DRIVE SYNC */
+const CLIENT_ID = '522433674352-5kmtu2n6idve7e14sruh4vs8cub77n33.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
+const FILE_NAME = 'newenergy_backup.json';
+
+let gToken = null;
+let driveFileId = localStorage.getItem('ne_drive_file_id') || null;
+let syncTimeout = null;
+
+function setSyncStatus(status, msg){
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if(!dot) return;
+  dot.className = 'sync-dot ' + status;
+  lbl.textContent = msg;
+}
+
+function gdriveLogin(){
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: async (resp) => {
+      if(resp.error){ setSyncStatus('err','Errore accesso'); return; }
+      gToken = resp.access_token;
+      localStorage.setItem('ne_gdrive_token', gToken);
+      document.getElementById('gdrive-login-bar').style.display = 'none';
+      document.getElementById('sync-bar').style.display = 'flex';
+      setSyncStatus('syncing','Connessione...');
+      await syncNow();
+    }
+  });
+  client.requestAccessToken();
+}
+
+function gdriveLogout(){
+  gToken = null;
+  driveFileId = null;
+  localStorage.removeItem('ne_gdrive_token');
+  localStorage.removeItem('ne_drive_file_id');
+  document.getElementById('gdrive-login-bar').style.display = 'flex';
+  document.getElementById('sync-bar').style.display = 'none';
+}
+
+async function syncNow(){
+  if(!gToken) return;
+  setSyncStatus('syncing','Salvataggio...');
+  try {
+    const payload = JSON.stringify({dati, nominativi, ts: Date.now()});
+    if(driveFileId){
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
+        method:'PATCH',
+        headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
+        body: payload
+      });
+    } else {
+      // Search for existing file
+      const search = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${FILE_NAME}'`, {
+        headers:{'Authorization':'Bearer '+gToken}
+      });
+      const sData = await search.json();
+      if(sData.files && sData.files.length > 0){
+        driveFileId = sData.files[0].id;
+        localStorage.setItem('ne_drive_file_id', driveFileId);
+        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
+          method:'PATCH',
+          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
+          body: payload
+        });
+      } else {
+        // Create new file
+        const meta = await fetch('https://www.googleapis.com/drive/v3/files', {
+          method:'POST',
+          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
+          body: JSON.stringify({name: FILE_NAME, parents:['appDataFolder']})
+        });
+        const mData = await meta.json();
+        driveFileId = mData.id;
+        localStorage.setItem('ne_drive_file_id', driveFileId);
+        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
+          method:'PATCH',
+          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
+          body: payload
+        });
+      }
+    }
+    const now = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Salvato alle ' + now);
+  } catch(e){
+    setSyncStatus('err','Errore salvataggio');
+  }
+}
+
+async function loadFromDrive(){
+  if(!gToken || !driveFileId) return;
+  try {
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${driveFileId}?alt=media`, {
+      headers:{'Authorization':'Bearer '+gToken}
+    });
+    const data = await res.json();
+    if(data.dati) dati = data.dati;
+    if(data.nominativi) nominativi = data.nominativi;
+    saveData();
+    render();
+    const now = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Ripristinato alle ' + now);
+  } catch(e){
+    setSyncStatus('err','Errore caricamento');
+  }
+}
+
+// Auto-sync after data changes
+const _origSaveData = saveData;
+function saveData(){
+  _origSaveData();
+  if(gToken){
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(syncNow, 2000);
+  }
+}
+
+// Try restore token on load
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('ne_gdrive_token');
+  if(saved){
+    gToken = saved;
+    document.getElementById('gdrive-login-bar').style.display = 'none';
+    document.getElementById('sync-bar').style.display = 'flex';
+    setSyncStatus('ok','Google Drive collegato');
+    if(driveFileId) loadFromDrive();
+  }
+});
 </script>
 </body>
 </html>
