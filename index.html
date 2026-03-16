@@ -1,373 +1,5 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NewEnergy Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;700&family=Courier+Prime&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://apis.google.com/js/api.js" async defer></script>
-<style>
-:root {
-  --gold: #b8922a; --gold2: #d4a83c;
-  --green: #3a8a60; --green2: #2e7050;
-  --blue: #4a7a9f; --red: #b05050;
-  --bg-s: #f0ebe0; --bg2-s: #e8e2d6; --bg3-s: #dfd8ca;
-  --bg-f: #e8f0e8; --bg2-f: #dceadc; --bg3-f: #d0e2d0;
-  --border: rgba(0,0,0,.09);
-  --text: #6a6450; --textl: #252015;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg-s);color:var(--text);font-family:'Courier Prime',monospace;font-size:14px}
-::-webkit-scrollbar{width:0}
-.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
-
-/* TOP BAR */
-.topbar{flex-shrink:0;padding:14px 18px 11px;padding-top:max(14px,env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid rgba(0,0,0,.1)}
-.tb-brand{font-family:'Playfair Display',serif}
-.tb-sub{font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.45);text-transform:uppercase;margin-bottom:2px}
-.tb-title{font-size:20px;font-weight:300;color:var(--textl);line-height:1}
-.tb-title span{color:var(--gold);font-weight:700}
-.tb-right{text-align:right}
-.tb-rlabel{font-size:8px;letter-spacing:2px;color:#445;text-transform:uppercase}
-.tb-rval{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);font-weight:700}
-.tb-rval span{font-size:10px;color:rgba(201,168,76,.45);font-weight:400}
-
-/* SCROLL */
-.scroll-area{flex:1;overflow-y:auto;padding:13px 14px 16px;-webkit-overflow-scrolling:touch}
-
-/* PANELS */
-.panel{display:none;animation:fu .27s ease both}
-.panel.active{display:block}
-@keyframes fu{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-
-/* BOTTOM NAV */
-.bottom-nav{flex-shrink:0;display:flex;background:#e8e2d6;border-top:1px solid rgba(0,0,0,.1);padding-bottom:max(10px,env(safe-area-inset-bottom))}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:none;border:none;cursor:pointer;color:#9a9080;padding:10px 0;font-family:'Courier Prime',monospace;transition:color .2s}
-.nav-btn.active{color:var(--gold)}
-.nav-icon{font-size:19px;line-height:1;transition:transform .2s}
-.nav-btn.active .nav-icon{transform:scale(1.18)}
-.nav-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase}
-
-/* CARDS */
-.card{background:linear-gradient(135deg,var(--bg2-s),var(--bg3-s));border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:11px}
-.card-f{background:linear-gradient(135deg,var(--bg2-f),var(--bg3-f));border:1px solid rgba(82,168,122,.1)}
-.clabel{font-size:8px;letter-spacing:3px;color:#445;text-transform:uppercase;margin-bottom:11px}
-
-/* KPI */
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
-.kpi-card{background:linear-gradient(135deg,var(--bg2-s),var(--bg3-s));border:1px solid var(--border);border-radius:14px;padding:14px}
-.kpi-card.full{grid-column:1/-1}
-.kpi-lbl{font-size:8px;letter-spacing:2px;color:#445;text-transform:uppercase;margin-bottom:8px}
-.kpi-val{font-family:'Playfair Display',serif;font-size:29px;font-weight:700;line-height:1}
-.kpi-val.sm{font-size:23px}
-.kpi-sub{font-size:11px;font-weight:400;opacity:.4}
-
-/* PROGRESS */
-.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.prog-title{font-family:'Playfair Display',serif;font-size:14px;color:var(--textl)}
-.prog-pct{font-family:'Playfair Display',serif;font-size:25px;color:var(--gold);font-weight:700}
-.prog-bg{background:rgba(0,0,0,.1);border-radius:3px;height:5px;overflow:hidden;margin-bottom:5px}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
-.prog-hint{font-size:10px;color:#445}
-
-/* MONTH ROW */
-.month-row{display:flex;align-items:center;gap:9px;padding:8px 4px;border-radius:8px}
-.mname{min-width:100px;font-size:12px;color:#a8bab2}
-.mname .yr{color:#445;font-size:10px}
-.mbar-bg{flex:1;background:rgba(0,0,0,.1);border-radius:2px;height:3px;overflow:hidden}
-.mbar-fill{height:100%;background:rgba(201,168,76,.45);border-radius:2px}
-.mearn{font-family:'Playfair Display',serif;font-size:16px;color:var(--green2);min-width:44px;text-align:right}
-
-/* YEAR SEP */
-.ysep{display:flex;align-items:center;gap:11px;margin:13px 0 9px}
-.ysep span{font-size:9px;letter-spacing:4px;color:rgba(160,130,50,.5);text-transform:uppercase}
-.ysep hr{flex:1;border:none;border-top:1px solid rgba(0,0,0,.07)}
-
-/* MONTH BLOCK */
-.mblock{background:linear-gradient(135deg,var(--bg2-s),var(--bg3-s));border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:9px}
-.mblock-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;margin-bottom:9px;border-bottom:1px solid rgba(0,0,0,.1)}
-.mblock-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--textl)}
-.mblock-sub{font-size:9px;color:#445;margin-top:2px}
-.mblock-earn{font-family:'Playfair Display',serif;font-size:20px;color:var(--green2);font-weight:700}
-
-/* CLIENT ROW */
-.crow{display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-radius:8px}
-.crow:active{background:rgba(201,168,76,.04)}
-.cname{font-size:12px;color:#a8bab2;flex:1;margin-right:6px}
-.cright{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.badge{font-size:7px;letter-spacing:1px;padding:3px 6px;border-radius:3px;white-space:nowrap}
-.bl{background:rgba(201,168,76,.08);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
-.bg{background:rgba(82,168,122,.08);color:var(--green2);border:1px solid rgba(82,168,122,.2)}
-.bp{background:rgba(82,168,122,.12);color:var(--green2);border:1px solid rgba(82,168,122,.3)}
-.cearn{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);white-space:nowrap}
-.brm{background:rgba(192,96,96,.06);border:1px solid rgba(192,96,96,.15);color:rgba(200,130,130,.6);border-radius:5px;padding:4px 7px;cursor:pointer;font-size:11px}
-.brm:active{background:rgba(192,96,96,.2);color:#e08080}
-
-/* INPUTS */
-.inp{width:100%;background:rgba(255,255,255,.7);border:1px solid rgba(0,0,0,.12);border-radius:10px;color:var(--textl);padding:12px 13px;font-size:14px;font-family:'Courier Prime',monospace;transition:border-color .2s;margin-bottom:9px}
-.inp:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.1)}
-.inp.sm{padding:9px 11px;font-size:13px}
-select.inp{cursor:pointer}
-
-/* PILLS */
-.pills{display:flex;gap:7px;flex-wrap:wrap}
-.pill{background:rgba(255,255,255,.6);color:#8a8270;border:1px solid rgba(0,0,0,.1);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:10px;letter-spacing:1px;font-family:'Courier Prime',monospace;transition:all .18s}
-.pill.active{background:rgba(201,168,76,.12);color:var(--gold);border-color:rgba(201,168,76,.35)}
-
-/* BTNS */
-.btn-p{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#141a16;border:none;border-radius:12px;padding:13px;cursor:pointer;font-size:11px;letter-spacing:3px;font-weight:bold;font-family:'Courier Prime',monospace;transition:all .18s;margin-bottom:9px}
-.btn-p:active{opacity:.82;transform:scale(.98)}
-.btn-s{width:100%;background:rgba(74,122,159,.1);color:var(--blue);border:1px solid rgba(74,122,159,.25);border-radius:12px;padding:11px;cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Courier Prime',monospace;transition:all .18s;margin-bottom:9px}
-.btn-s:active{opacity:.75}
-
-/* AGGIUNGI - contratto list */
-.ctr-row{display:flex;align-items:center;gap:7px;padding:9px 4px;border-bottom:1px solid rgba(0,0,0,.06)}
-.ctr-row:last-child{border-bottom:none}
-.ctr-info{flex:1;min-width:0}
-.ctr-name{font-size:13px;color:#a8bab2;margin-bottom:3px}
-.ctr-badges{display:flex;gap:4px;flex-wrap:wrap}
-.ctr-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
-.ctr-earn{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold)}
-.paid-btn{font-size:17px;background:none;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:4px 7px;cursor:pointer;transition:all .18s;line-height:1}
-.paid-btn.paid{background:rgba(82,168,122,.12);border-color:rgba(82,168,122,.3)}
-.paid-btn:active{transform:scale(.88)}
-
-/* NOMINATIVI */
-.nom-add{display:flex;gap:7px}
-.nom-add .inp{margin-bottom:0;flex:1}
-
-.nom-card{
-  background:linear-gradient(135deg,var(--bg2-f),var(--bg3-f));
-  border:1px solid rgba(58,138,96,.15);
-  border-radius:14px;margin-bottom:10px;
-  overflow:hidden;transition:border-color .2s;
-}
-.nom-card.open{border-color:rgba(82,168,122,.3)}
-.nom-card-header{
-  display:flex;align-items:center;gap:10px;
-  padding:13px 14px;cursor:pointer;user-select:none;
-}
-.nom-card-header:active{opacity:.8}
-.nom-dots{display:flex;gap:5px;align-items:center;flex-shrink:0}
-.ndot{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.1);transition:background .2s}
-.ndot.on-co{background:var(--blue)}
-.ndot.on-dc{background:var(--gold)}
-.ndot.on-sent{background:var(--green2)}
-.nom-card-name{flex:1;font-size:14px;color:#7a9a88;font-weight:400;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nom-card-prov{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);flex-shrink:0}
-.nom-arrow{font-size:11px;color:#445;transition:transform .25s;flex-shrink:0}
-.nom-card.open .nom-arrow{transform:rotate(180deg)}
-
-.nom-card-body{
-  display:none;padding:0 14px 14px;
-  border-top:1px solid rgba(0,0,0,.07);
-  animation:fu .2s ease both;
-}
-.nom-card.open .nom-card-body{display:block}
-
-.nom-steps{display:flex;gap:8px;margin:12px 0 10px}
-.nstep{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:10px 6px;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.4);transition:all .2s}
-.nstep:active{transform:scale(.94)}
-.nstep-icon{font-size:20px;line-height:1}
-.nstep-lbl{font-size:8px;letter-spacing:2px;color:#445;text-transform:uppercase}
-.nstep.active-co{background:rgba(106,154,191,.12);border-color:rgba(106,154,191,.35)}
-.nstep.active-co .nstep-lbl{color:var(--blue)}
-.nstep.active-dc{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.35)}
-.nstep.active-dc .nstep-lbl{color:var(--gold)}
-.nstep.active-sent{background:rgba(82,168,122,.12);border-color:rgba(82,168,122,.35)}
-.nstep.active-sent .nstep-lbl{color:var(--green2)}
-
-.nom-toggles{display:flex;gap:8px;margin-bottom:10px}
-.ntog{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.4);cursor:pointer;font-size:12px;letter-spacing:1px;transition:all .2s}
-.ntog:active{transform:scale(.95)}
-.ntog.on-luce{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.35);color:var(--gold)}
-.ntog.on-gas{background:rgba(82,168,122,.1);border-color:rgba(82,168,122,.35);color:var(--green2)}
-
-.nom-prov-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.nom-prov-lbl{font-size:9px;letter-spacing:2px;color:#445;white-space:nowrap}
-.nom-prov-inp{flex:1;background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.12);border-radius:8px;color:var(--textl);padding:9px 11px;font-size:13px;font-family:'Courier Prime',monospace;transition:border-color .2s}
-.nom-prov-inp:focus{outline:none;border-color:var(--gold)}
-
-.nom-note{width:100%;background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.1);border-radius:9px;color:var(--textl);padding:9px 11px;font-size:12px;font-family:'Courier Prime',monospace;resize:none;height:64px;transition:border-color .2s;margin-bottom:10px}
-.nom-note:focus{outline:none;border-color:rgba(82,168,122,.35)}
-
-.nom-footer{display:flex;justify-content:flex-end}
-.nrm{background:rgba(192,96,96,.06);border:1px solid rgba(192,96,96,.15);color:rgba(200,130,130,.55);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:'Courier Prime',monospace}
-.nrm:active{background:rgba(192,96,96,.2);color:#e08080}
-
-/* PROIEZIONE */
-.proj-sep{display:flex;align-items:center;gap:11px;margin:18px 0 13px}
-.proj-sep span{font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.3);text-transform:uppercase}
-.proj-sep hr{flex:1;border:none;border-top:1px solid rgba(201,168,76,.07)}
-.prow{border-radius:14px;padding:15px 17px;margin-bottom:9px;display:flex;align-items:center;gap:13px}
-.pyear{font-family:'Playfair Display',serif;font-size:25px;font-weight:300;min-width:62px}
-.pbody{flex:1;min-width:0}
-.pmeta{display:flex;justify-content:space-between;margin-bottom:7px;font-size:9px;color:#445;flex-wrap:wrap;gap:2px}
-.pmeta .ok{color:var(--green2)}
-.pprog-bg{background:rgba(0,0,0,.12);border-radius:2px;height:4px;overflow:hidden}
-.pprog-fill{height:100%;border-radius:2px;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
-.pearn{text-align:right;min-width:55px}
-.pearn-val{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
-.pearn-sub{font-size:8px;color:#556;letter-spacing:1px}
-.note-box{background:linear-gradient(135deg,var(--bg2-f),var(--bg3-f));border:1px solid rgba(82,168,122,.1);border-radius:14px;padding:15px;margin-top:7px}
-.note-lbl{font-size:8px;letter-spacing:3px;color:rgba(82,168,122,.4);text-transform:uppercase;margin-bottom:8px}
-.note-txt{font-size:12px;color:#607060;line-height:1.9}
-.hl-g{color:var(--gold)}.hl-gr{color:var(--green2)}.hl-w{color:var(--textl)}
-
-.ins-lbl{font-size:8px;letter-spacing:3px;color:#334;text-transform:uppercase;margin:13px 0 9px;padding-top:13px;border-top:1px solid var(--border)}
-
-/* CHK LUCE/GAS in AGGIUNGI */
-.chk-tog{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.1);cursor:pointer;font-size:11px;letter-spacing:2px;transition:all .18s;background:rgba(255,255,255,.5);color:#8a8270}
-.chk-tog.on-luce{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);color:var(--gold)}
-.chk-tog.on-gas{background:rgba(82,168,122,.1);border-color:rgba(82,168,122,.4);color:var(--green2)}
-
-/* GOOGLE DRIVE SYNC */
-.sync-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.5);border-bottom:1px solid rgba(0,0,0,.07);font-size:10px;color:#445;letter-spacing:1px;flex-shrink:0}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:#ccc;flex-shrink:0;transition:background .3s}
-.sync-dot.ok{background:#52a87a}
-.sync-dot.syncing{background:#c9a84c;animation:pulse .8s infinite}
-.sync-dot.err{background:#c05050}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sync-label{flex:1}
-.sync-btn{background:rgba(74,122,159,.1);color:var(--blue);border:1px solid rgba(74,122,159,.2);border-radius:7px;padding:4px 10px;cursor:pointer;font-size:9px;letter-spacing:1px;font-family:'Courier Prime',monospace}
-.sync-btn:active{opacity:.7}
-.gdrive-login{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(74,122,159,.07);border-bottom:1px solid rgba(0,0,0,.07);font-size:10px;color:#445;flex-shrink:0}
-.gdrive-login-btn{background:linear-gradient(135deg,#4285f4,#357ae8);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:10px;letter-spacing:1px;font-family:'Courier Prime',monospace}
-</style>
-</head>
-<body>
-<div class="app">
-
-<div id="gdrive-login-bar" class="gdrive-login">
-  <span style="flex:1">☁️ Collega Google Drive per salvare i dati sul cloud</span>
-  <button class="gdrive-login-btn" onclick="gdriveLogin()">Accedi</button>
-</div>
-<div id="sync-bar" class="sync-bar" style="display:none">
-  <div class="sync-dot" id="syncDot"></div>
-  <span class="sync-label" id="syncLabel">Google Drive collegato</span>
-  <button class="sync-btn" onclick="syncNow()">↑ Salva ora</button>
-  <button class="sync-btn" onclick="gdriveLogout()" style="background:rgba(192,96,96,.08);color:#c05050;border-color:rgba(192,96,96,.2)">Esci</button>
-</div>
-
-<div class="topbar">
-  <div class="tb-brand">
-    <div class="tb-sub">Multi Brand</div>
-    <div class="tb-title">New<span>Energy</span></div>
-  </div>
-  <div class="tb-right">
-    <div class="tb-rlabel">Obiettivo</div>
-    <div class="tb-rval">€500<span>/mese</span></div>
-  </div>
-</div>
-
-<div class="scroll-area">
-
-  <!-- HOME -->
-  <div class="panel active" id="panel-home">
-    <div class="kpi-grid">
-      <div class="kpi-card" style="border-top:2px solid rgba(201,168,76,.3)">
-        <div class="kpi-lbl">Contratti</div>
-        <div class="kpi-val" style="color:var(--gold)" id="kpi-c">0</div>
-      </div>
-      <div class="kpi-card" style="border-top:2px solid rgba(82,168,122,.3)">
-        <div class="kpi-lbl">Guadagno</div>
-        <div class="kpi-val sm" style="color:var(--green2)" id="kpi-g">€0</div>
-      </div>
-      <div class="kpi-card full" style="border-top:2px solid rgba(106,154,191,.2)">
-        <div class="kpi-lbl">Media mensile</div>
-        <div class="kpi-val sm" style="color:var(--blue)" id="kpi-m">€0<span class="kpi-sub">/mese</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="prog-row">
-        <div class="prog-title" id="progLabel">€0 / €500</div>
-        <div class="prog-pct" id="progPct">0%</div>
-      </div>
-      <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-      <div class="prog-hint">Progresso verso €500/mese</div>
-    </div>
-    <div class="card">
-      <div class="clabel">Riepilogo mensile</div>
-      <div id="monthRows"></div>
-    </div>
-  </div>
-
-  <!-- LEAD / NOMINATIVI -->
-  <div class="panel" id="panel-nominativi">
-    <div class="card card-f">
-      <div class="clabel" style="color:rgba(82,168,122,.45)">Nuovo nominativo</div>
-      <div class="nom-add">
-        <input class="inp sm" id="nomInput" placeholder="Nome e Cognome" onkeydown="if(event.key==='Enter')addNom()" style="margin-bottom:0">
-        <button class="btn-p" style="width:auto;padding:9px 18px;margin-bottom:0;font-size:15px;letter-spacing:0" onclick="addNom()">+</button>
-      </div>
-    </div>
-    <div id="nomList"></div>
-    <div id="nomEmpty" style="text-align:center;padding:28px 0;font-size:11px;color:#334;letter-spacing:2px">NESSUN NOMINATIVO</div>
-  </div>
-
-  <!-- AGGIUNGI -->
-  <div class="panel" id="panel-aggiungi">
-    <div class="card">
-      <div class="clabel">Periodo</div>
-      <div class="pills" id="periodPills"></div>
-    </div>
-    <div class="card" style="border:1px solid rgba(106,154,191,.1)">
-      <div class="clabel" style="color:rgba(106,154,191,.4)">Nuovo periodo</div>
-      <input class="inp" id="newYear" placeholder="Anno (es. 2026)" type="number">
-      <select class="inp" id="newMonth">
-        <option value="">Seleziona mese</option>
-        <option>Gennaio</option><option>Febbraio</option><option>Marzo</option>
-        <option>Aprile</option><option>Maggio</option><option>Giugno</option>
-        <option>Luglio</option><option>Agosto</option><option>Settembre</option>
-        <option>Ottobre</option><option>Novembre</option><option>Dicembre</option>
-      </select>
-      <button class="btn-s" onclick="addPeriod()">+ Aggiungi periodo</button>
-    </div>
-    <div class="card" style="border-top:2px solid rgba(201,168,76,.2)">
-      <div class="clabel">Nuovo contratto</div>
-      <div style="font-family:'Playfair Display',serif;font-size:14px;color:rgba(201,168,76,.5);margin-bottom:13px" id="insertLabel">—</div>
-      <input class="inp" id="clientName" placeholder="Nome e Cognome" onkeydown="if(event.key==='Enter')addClient()">
-      <div style="display:flex;gap:8px;margin-bottom:9px">
-        <div id="chk-luce" class="chk-tog" onclick="toggleCheck('luce')">☀️ Luce</div>
-        <div id="chk-gas" class="chk-tog" onclick="toggleCheck('gas')">🔥 Gas</div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:11px">
-        <span style="font-size:10px;color:#445;letter-spacing:2px;white-space:nowrap">€ PROV.</span>
-        <input class="inp" id="provInput" placeholder="es. 45" type="number" style="margin-bottom:0;flex:1">
-      </div>
-      <button class="btn-p" onclick="addClient()">+ AGGIUNGI</button>
-      <div id="insertList"></div>
-    </div>
-  </div>
-
-  <!-- STORICO -->
-  <div class="panel" id="panel-storico">
-    <div id="storicoContent"></div>
-    <div class="proj-sep"><hr><span>Proiezione crescita</span><hr></div>
-    <div id="projRows"></div>
-    <div class="note-box">
-      <div class="note-lbl">Nota strategica</div>
-      <p class="note-txt">Con <span class="hl-g">€45/contratto</span> e raddoppio annuo, raggiungerai <span class="hl-gr">€500/mese</span> nel <span class="hl-w">2028</span>. Già oggi hai chiuso <span class="hl-g">11 contratti in un giorno</span> — con costanza potresti anticipare l'obiettivo di un anno.</p>
-    </div>
-  </div>
-
-</div>
-
-<nav class="bottom-nav">
-  <button class="nav-btn active" data-tab="home"><span class="nav-icon">◈</span><span class="nav-label">Home</span></button>
-  <button class="nav-btn" data-tab="nominativi"><span class="nav-icon">👥</span><span class="nav-label">Lead</span></button>
-  <button class="nav-btn" data-tab="aggiungi"><span class="nav-icon">＋</span><span class="nav-label">Aggiungi</span></button>
-  <button class="nav-btn" data-tab="storico"><span class="nav-icon">◉</span><span class="nav-label">Storico</span></button>
-</nav>
-
-</div>
-
-<script>
 const OBJ = 500;
 const MESI = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
-
 const proj = [
   {anno:2025,contratti:20,guadagno:800},
   {anno:2026,contratti:40,guadagno:1800},
@@ -377,20 +9,20 @@ const proj = [
 
 let dati = {
   2025:{Dicembre:[
-    {nome:"Giuseppe D'Atri",luce:1,gas:0,prov:40,paid:false,paidDate:null},
-    {nome:"Natalia Ceban",luce:1,gas:1,prov:40,paid:false,paidDate:null},
-    {nome:"Nikola Kruscova",luce:1,gas:1,prov:40,paid:false,paidDate:null},
-    {nome:"Raffaella Pula",luce:1,gas:0,prov:40,paid:false,paidDate:null},
-    {nome:"Gisberta Manucci",luce:1,gas:1,prov:40,paid:false,paidDate:null},
-    {nome:"Sevgi Dogrusus",luce:1,gas:1,prov:40,paid:false,paidDate:null},
+    {id:'c1',nome:"Giuseppe D'Atri",luce:1,gas:0,prov:40,paid:false,paidDate:null},
+    {id:'c2',nome:"Natalia Ceban",luce:1,gas:1,prov:40,paid:false,paidDate:null},
+    {id:'c3',nome:"Nikola Kruscova",luce:1,gas:1,prov:40,paid:false,paidDate:null},
+    {id:'c4',nome:"Raffaella Pula",luce:1,gas:0,prov:40,paid:false,paidDate:null},
+    {id:'c5',nome:"Gisberta Manucci",luce:1,gas:1,prov:40,paid:false,paidDate:null},
+    {id:'c6',nome:"Sevgi Dogrusus",luce:1,gas:1,prov:40,paid:false,paidDate:null},
   ]},
   2026:{Marzo:[
-    {nome:"Barbara Lubrano",luce:1,gas:1,prov:45,paid:false,paidDate:null},
-    {nome:"Silvia Provvedi",luce:1,gas:1,prov:45,paid:false,paidDate:null},
-    {nome:"Salvatore D'Ambrosio",luce:1,gas:1,prov:45,paid:false,paidDate:null},
-    {nome:"Claudio Accardo",luce:1,gas:1,prov:45,paid:false,paidDate:null},
-    {nome:"Alessandra Bosi",luce:1,gas:1,prov:45,paid:false,paidDate:null},
-    {nome:"Luigi Accardo",luce:1,gas:0,prov:45,paid:false,paidDate:null},
+    {id:'c7',nome:"Barbara Lubrano",luce:1,gas:1,prov:45,paid:false,paidDate:null},
+    {id:'c8',nome:"Silvia Provvedi",luce:1,gas:1,prov:45,paid:false,paidDate:null},
+    {id:'c9',nome:"Salvatore D'Ambrosio",luce:1,gas:1,prov:45,paid:false,paidDate:null},
+    {id:'c10',nome:"Claudio Accardo",luce:1,gas:1,prov:45,paid:false,paidDate:null},
+    {id:'c11',nome:"Alessandra Bosi",luce:1,gas:1,prov:45,paid:false,paidDate:null},
+    {id:'c12',nome:"Luigi Accardo",luce:1,gas:0,prov:45,paid:false,paidDate:null},
   ]}
 };
 
@@ -401,6 +33,7 @@ let curTab = "home";
 let nomOpenId = null;
 
 /* UTILS */
+function genId(){ return 'c' + Date.now() + Math.random().toString(36).slice(2,6); }
 function allC(){ return Object.values(dati).flatMap(a => Object.values(a).flat()); }
 function totalC(){ return allC().reduce((s,c) => s + (c.luce + c.gas), 0); }
 function totalG(){ return allC().reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0); }
@@ -412,12 +45,20 @@ function mC(a,m){ return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.ga
 function nowDate(){ return new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
 
 /* STORAGE */
+// FIX: saveData unica, con logica auto-sync integrata direttamente
+let syncTimeout = null;
 function saveData(){
   try {
     localStorage.setItem('ne_dati', JSON.stringify(dati));
     localStorage.setItem('ne_nom', JSON.stringify(nominativi));
   } catch(e){}
+  // Auto-sync Google Drive dopo 2s dall'ultima modifica
+  if(gToken){
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(syncNow, 2000);
+  }
 }
+
 function loadData(){
   try {
     const d = localStorage.getItem('ne_dati');
@@ -468,7 +109,9 @@ function renderNom(){
   el.innerHTML = nominativi.map((n, i) => {
     const isOpen = nomOpenId === n.id;
     const provDisplay = n.prov ? '€' + n.prov : '';
-    const luceGasIcons = (n.luce || n.gas) ? `<div style="display:flex;gap:3px;flex-shrink:0">${n.luce ? '<span style="font-size:13px">☀️</span>' : ''}${n.gas ? '<span style="font-size:13px">🔥</span>' : ''}</div>` : '';
+    const luceGasIcons = (n.luce || n.gas)
+      ? `<div style="display:flex;gap:3px;flex-shrink:0">${n.luce ? '<span style="font-size:13px">☀️</span>' : ''}${n.gas ? '<span style="font-size:13px">🔥</span>' : ''}</div>`
+      : '';
     return `<div class="nom-card ${isOpen ? 'open' : ''}" id="nomcard-${n.id}">
       <div class="nom-card-header" onclick="toggleOpen(${n.id})">
         <div class="nom-dots">
@@ -506,7 +149,7 @@ function renderNom(){
         </div>
         <textarea class="nom-note" placeholder="Note sul cliente..." onchange="updateNote(${i}, this.value)">${n.note || ''}</textarea>
         <div class="nom-footer">
-          <button class="nrm" onclick="rmNom(${i})">✕ Elimina</button>
+          <button class="nrm" onclick="rmNom('${n.id}')">✕ Elimina</button>
         </div>
       </div>
     </div>`;
@@ -541,6 +184,7 @@ function toggleNomField(i, field){
       if(!dati[anno]) dati[anno] = {};
       if(!dati[anno][mese]) dati[anno][mese] = [];
       dati[anno][mese].push({
+        id: genId(),
         nome: n.nome,
         luce: n.luce ? 1 : 0,
         gas: n.gas ? 1 : 0,
@@ -559,28 +203,34 @@ function toggleNomField(i, field){
 
 function updateNote(i, v){ nominativi[i].note = v; saveData(); }
 function updateProv(i, v){ nominativi[i].prov = parseFloat(v) || 0; saveData(); renderNom(); }
-function rmNom(i){ nominativi.splice(i, 1); saveData(); renderNom(); }
+
+// FIX: rmNom ora usa l'id univoco invece dell'indice
+function rmNom(id){
+  nominativi = nominativi.filter(n => n.id != id);
+  if(nomOpenId == id) nomOpenId = null;
+  saveData();
+  renderNom();
+}
 
 /* AGGIUNGI */
 function renderAgg(){
   let pills = '';
   Object.keys(dati).sort().forEach(anno => {
     Object.keys(dati[anno]).sort((a,b) => MESI.indexOf(a) - MESI.indexOf(b)).forEach(mese => {
-      const on = selAnno == anno && selMese == mese;
+      const on = selAnno === String(anno) && selMese === mese;
       pills += `<button class="pill${on ? ' active' : ''}" onclick="selPeriod('${anno}','${mese}')">${mese} ${anno}</button>`;
     });
   });
   document.getElementById('periodPills').innerHTML = pills;
   document.getElementById('insertLabel').textContent = selMese + ' ' + selAnno;
   updateChkUI();
-
   const list = dati[selAnno]?.[selMese] || [];
   const totG = list.reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0);
   const totC = list.reduce((s,c) => s + (c.luce + c.gas), 0);
   let lh = '';
   if(list.length){
     lh = `<div class="ins-lbl">${totC} contratti — €${totG}</div>`;
-    list.forEach((c, i) => {
+    list.forEach((c) => {
       const earn = (c.luce + c.gas) * c.prov;
       lh += `<div class="ctr-row">
         <div class="ctr-info">
@@ -593,8 +243,8 @@ function renderAgg(){
         </div>
         <div class="ctr-right">
           <span class="ctr-earn">€${earn}</span>
-          <button class="paid-btn ${c.paid ? 'paid' : ''}" onclick="togglePaid('${selAnno}','${selMese}',${i})" title="${c.paid ? 'Pagato il ' + c.paidDate : 'Non pagato'}">🤑</button>
-          <button class="brm" onclick="rmSel(${i})">✕</button>
+          <button class="paid-btn ${c.paid ? 'paid' : ''}" onclick="togglePaid('${selAnno}','${selMese}','${c.id}')" title="${c.paid ? 'Pagato il ' + c.paidDate : 'Non pagato'}">🤑</button>
+          <button class="brm" onclick="rmSel('${c.id}')">✕</button>
         </div>
       </div>`;
     });
@@ -616,7 +266,7 @@ function toggleCheck(t){
   updateChkUI();
 }
 
-function selPeriod(a, m){ selAnno = a; selMese = m; renderAgg(); }
+function selPeriod(a, m){ selAnno = String(a); selMese = m; renderAgg(); }
 
 function addPeriod(){
   const y = document.getElementById('newYear').value.trim();
@@ -637,7 +287,15 @@ function addClient(){
   if(!n || (!chkLuce && !chkGas)) return;
   if(!dati[selAnno]) dati[selAnno] = {};
   if(!dati[selAnno][selMese]) dati[selAnno][selMese] = [];
-  dati[selAnno][selMese].push({nome: n, luce: chkLuce ? 1 : 0, gas: chkGas ? 1 : 0, prov: pv, paid: false, paidDate: null});
+  dati[selAnno][selMese].push({
+    id: genId(),
+    nome: n,
+    luce: chkLuce ? 1 : 0,
+    gas: chkGas ? 1 : 0,
+    prov: pv,
+    paid: false,
+    paidDate: null
+  });
   document.getElementById('clientName').value = '';
   document.getElementById('provInput').value = '';
   chkLuce = false; chkGas = false;
@@ -645,27 +303,30 @@ function addClient(){
   render();
 }
 
-function togglePaid(a, m, i){
-  const c = dati[a][m][i];
+// FIX: togglePaid e rmSel ora usano l'id univoco
+function togglePaid(a, m, id){
+  const c = (dati[a][m] || []).find(x => x.id === id);
+  if(!c) return;
   c.paid = !c.paid;
   c.paidDate = c.paid ? nowDate() : null;
   saveData();
   renderAgg();
 }
 
-function rmSel(i){
-  dati[selAnno][selMese].splice(i, 1);
-  saveData();
-  render();
+function rmSel(id){
+  for(const anno of Object.keys(dati)){
+    for(const mese of Object.keys(dati[anno])){
+      const idx = dati[anno][mese].findIndex(x => x.id === id);
+      if(idx !== -1){ dati[anno][mese].splice(idx, 1); saveData(); render(); return; }
+    }
+  }
 }
 
 /* STORICO */
 function renderStorico(){
   let html = '';
   const years = Object.keys(dati).sort();
-  if(!years.length){
-    html = '<div style="text-align:center;padding:28px;font-size:11px;color:#9a9080">Nessun contratto</div>';
-  }
+  if(!years.length){ html = '<div style="text-align:center;padding:28px;font-size:11px;color:#9a9080">Nessun contratto</div>'; }
   years.forEach(anno => {
     html += `<div class="ysep"><span>${anno}</span><hr></div>`;
     Object.keys(dati[anno]).sort((a,b) => MESI.indexOf(a) - MESI.indexOf(b)).forEach(mese => {
@@ -673,7 +334,7 @@ function renderStorico(){
       const nc = cl.reduce((s,c) => s + (c.luce + c.gas), 0);
       const tg = cl.reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0);
       let rows = '';
-      cl.forEach((c, i) => {
+      cl.forEach((c) => {
         const earn = (c.luce + c.gas) * c.prov;
         rows += `<div class="crow">
           <span class="cname">${c.nome}</span>
@@ -683,7 +344,7 @@ function renderStorico(){
             ${c.fromLead ? '<span class="badge" style="background:rgba(82,168,122,.07);color:#52a87a;border:1px solid rgba(82,168,122,.15);font-size:7px">LEAD</span>' : ''}
             ${c.paid ? '<span class="badge bp">🤑 ' + c.paidDate + '</span>' : ''}
             <span class="cearn">€${earn}</span>
-            <button class="brm" onclick="rmClient('${anno}','${mese}',${i})">✕</button>
+            <button class="brm" onclick="rmClient('${anno}','${mese}','${c.id}')">✕</button>
           </div>
         </div>`;
       });
@@ -700,7 +361,6 @@ function renderStorico(){
     });
   });
   document.getElementById('storicoContent').innerHTML = html;
-
   let ph = '';
   proj.forEach(p => {
     const m2 = Math.round(p.guadagno / 12);
@@ -725,10 +385,10 @@ function renderStorico(){
   document.getElementById('projRows').innerHTML = ph;
 }
 
-function rmClient(a, m, i){
-  dati[a][m].splice(i, 1);
-  saveData();
-  render();
+// FIX: rmClient usa l'id univoco
+function rmClient(a, m, id){
+  const idx = (dati[a]?.[m] || []).findIndex(x => x.id === id);
+  if(idx !== -1){ dati[a][m].splice(idx, 1); saveData(); render(); }
 }
 
 /* NAV */
@@ -745,14 +405,14 @@ document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', (
 loadData();
 render();
 
-/* GOOGLE DRIVE SYNC */
+/* ───────────────────────────────────────────
+   GOOGLE DRIVE SYNC
+─────────────────────────────────────────── */
 const CLIENT_ID = '522433674352-5kmtu2n6idve7e14sruh4vs8cub77n33.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
 const FILE_NAME = 'newenergy_backup.json';
-
 let gToken = null;
 let driveFileId = localStorage.getItem('ne_drive_file_id') || null;
-let syncTimeout = null;
 
 function setSyncStatus(status, msg){
   const dot = document.getElementById('syncDot');
@@ -788,22 +448,25 @@ function gdriveLogout(){
   document.getElementById('sync-bar').style.display = 'none';
 }
 
+// FIX: gestione token scaduto (errore 401) in syncNow e loadFromDrive
 async function syncNow(){
   if(!gToken) return;
   setSyncStatus('syncing','Salvataggio...');
   try {
     const payload = JSON.stringify({dati, nominativi, ts: Date.now()});
     if(driveFileId){
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
+      const res = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
         method:'PATCH',
         headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
         body: payload
       });
+      // FIX: token scaduto → logout e chiedi di riaccedere
+      if(res.status === 401){ gdriveLogout(); setSyncStatus('err','Sessione scaduta, accedi di nuovo'); return; }
     } else {
-      // Search for existing file
       const search = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${FILE_NAME}'`, {
         headers:{'Authorization':'Bearer '+gToken}
       });
+      if(search.status === 401){ gdriveLogout(); setSyncStatus('err','Sessione scaduta, accedi di nuovo'); return; }
       const sData = await search.json();
       if(sData.files && sData.files.length > 0){
         driveFileId = sData.files[0].id;
@@ -814,7 +477,6 @@ async function syncNow(){
           body: payload
         });
       } else {
-        // Create new file
         const meta = await fetch('https://www.googleapis.com/drive/v3/files', {
           method:'POST',
           headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
@@ -843,6 +505,8 @@ async function loadFromDrive(){
     const res = await fetch(`https://www.googleapis.com/drive/v3/files/${driveFileId}?alt=media`, {
       headers:{'Authorization':'Bearer '+gToken}
     });
+    // FIX: token scaduto
+    if(res.status === 401){ gdriveLogout(); setSyncStatus('err','Sessione scaduta, accedi di nuovo'); return; }
     const data = await res.json();
     if(data.dati) dati = data.dati;
     if(data.nominativi) nominativi = data.nominativi;
@@ -855,17 +519,7 @@ async function loadFromDrive(){
   }
 }
 
-// Auto-sync after data changes
-const _origSaveData = saveData;
-function saveData(){
-  _origSaveData();
-  if(gToken){
-    clearTimeout(syncTimeout);
-    syncTimeout = setTimeout(syncNow, 2000);
-  }
-}
-
-// Try restore token on load
+// Ripristino token al caricamento pagina
 window.addEventListener('load', () => {
   const saved = localStorage.getItem('ne_gdrive_token');
   if(saved){
@@ -876,6 +530,3 @@ window.addEventListener('load', () => {
     if(driveFileId) loadFromDrive();
   }
 });
-</script>
-</body>
-</html>
