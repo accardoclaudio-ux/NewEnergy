@@ -137,18 +137,9 @@ select.inp{cursor:pointer}
 /* NOMINATIVI */
 .nom-add{display:flex;gap:7px}
 .nom-add .inp{margin-bottom:0;flex:1}
-
-.nom-card{
-  background:linear-gradient(135deg,var(--bg2-f),var(--bg3-f));
-  border:1px solid rgba(58,138,96,.15);
-  border-radius:14px;margin-bottom:10px;
-  overflow:hidden;transition:border-color .2s;
-}
+.nom-card{background:linear-gradient(135deg,var(--bg2-f),var(--bg3-f));border:1px solid rgba(58,138,96,.15);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
 .nom-card.open{border-color:rgba(82,168,122,.3)}
-.nom-card-header{
-  display:flex;align-items:center;gap:10px;
-  padding:13px 14px;cursor:pointer;user-select:none;
-}
+.nom-card-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none}
 .nom-card-header:active{opacity:.8}
 .nom-dots{display:flex;gap:5px;align-items:center;flex-shrink:0}
 .ndot{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.1);transition:background .2s}
@@ -159,14 +150,8 @@ select.inp{cursor:pointer}
 .nom-card-prov{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);flex-shrink:0}
 .nom-arrow{font-size:11px;color:#445;transition:transform .25s;flex-shrink:0}
 .nom-card.open .nom-arrow{transform:rotate(180deg)}
-
-.nom-card-body{
-  display:none;padding:0 14px 14px;
-  border-top:1px solid rgba(0,0,0,.07);
-  animation:fu .2s ease both;
-}
+.nom-card-body{display:none;padding:0 14px 14px;border-top:1px solid rgba(0,0,0,.07);animation:fu .2s ease both}
 .nom-card.open .nom-card-body{display:block}
-
 .nom-steps{display:flex;gap:8px;margin:12px 0 10px}
 .nstep{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:10px 6px;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.4);transition:all .2s}
 .nstep:active{transform:scale(.94)}
@@ -178,21 +163,17 @@ select.inp{cursor:pointer}
 .nstep.active-dc .nstep-lbl{color:var(--gold)}
 .nstep.active-sent{background:rgba(82,168,122,.12);border-color:rgba(82,168,122,.35)}
 .nstep.active-sent .nstep-lbl{color:var(--green2)}
-
 .nom-toggles{display:flex;gap:8px;margin-bottom:10px}
 .ntog{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.4);cursor:pointer;font-size:12px;letter-spacing:1px;transition:all .2s}
 .ntog:active{transform:scale(.95)}
 .ntog.on-luce{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.35);color:var(--gold)}
 .ntog.on-gas{background:rgba(82,168,122,.1);border-color:rgba(82,168,122,.35);color:var(--green2)}
-
 .nom-prov-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .nom-prov-lbl{font-size:9px;letter-spacing:2px;color:#445;white-space:nowrap}
 .nom-prov-inp{flex:1;background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.12);border-radius:8px;color:var(--textl);padding:9px 11px;font-size:13px;font-family:'Courier Prime',monospace;transition:border-color .2s}
 .nom-prov-inp:focus{outline:none;border-color:var(--gold)}
-
 .nom-note{width:100%;background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.1);border-radius:9px;color:var(--textl);padding:9px 11px;font-size:12px;font-family:'Courier Prime',monospace;resize:none;height:64px;transition:border-color .2s;margin-bottom:10px}
 .nom-note:focus{outline:none;border-color:rgba(82,168,122,.35)}
-
 .nom-footer{display:flex;justify-content:flex-end}
 .nrm{background:rgba(192,96,96,.06);border:1px solid rgba(192,96,96,.15);color:rgba(200,130,130,.55);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:'Courier Prime',monospace}
 .nrm:active{background:rgba(192,96,96,.2);color:#e08080}
@@ -215,10 +196,9 @@ select.inp{cursor:pointer}
 .note-lbl{font-size:8px;letter-spacing:3px;color:rgba(82,168,122,.4);text-transform:uppercase;margin-bottom:8px}
 .note-txt{font-size:12px;color:#607060;line-height:1.9}
 .hl-g{color:var(--gold)}.hl-gr{color:var(--green2)}.hl-w{color:var(--textl)}
-
 .ins-lbl{font-size:8px;letter-spacing:3px;color:#334;text-transform:uppercase;margin:13px 0 9px;padding-top:13px;border-top:1px solid var(--border)}
 
-/* CHK LUCE/GAS in AGGIUNGI */
+/* CHK LUCE/GAS */
 .chk-tog{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.1);cursor:pointer;font-size:11px;letter-spacing:2px;transition:all .18s;background:rgba(255,255,255,.5);color:#8a8270}
 .chk-tog.on-luce{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);color:var(--gold)}
 .chk-tog.on-gas{background:rgba(82,168,122,.1);border-color:rgba(82,168,122,.4);color:var(--green2)}
@@ -235,6 +215,45 @@ select.inp{cursor:pointer}
 .sync-btn:active{opacity:.7}
 .gdrive-login{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(74,122,159,.07);border-bottom:1px solid rgba(0,0,0,.07);font-size:10px;color:#445;flex-shrink:0}
 .gdrive-login-btn{background:linear-gradient(135deg,#4285f4,#357ae8);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:10px;letter-spacing:1px;font-family:'Courier Prime',monospace}
+
+/* RITENUTE */
+.rit-section{background:linear-gradient(135deg,var(--bg2-s),var(--bg3-s));border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:11px}
+.rit-section-lbl{font-size:8px;letter-spacing:3px;color:#445;text-transform:uppercase;margin-bottom:12px}
+.rit-inp{width:100%;background:rgba(255,255,255,.7);border:1px solid rgba(0,0,0,.12);border-radius:10px;color:var(--textl);padding:10px 12px;font-size:13px;font-family:'Courier Prime',monospace;transition:border-color .2s;margin-bottom:8px}
+.rit-inp:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.1)}
+.rit-inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.rit-inp-grid .rit-inp{margin-bottom:0}
+.rit-preview{background:rgba(255,255,255,.8);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px;margin-bottom:10px;display:none}
+.rit-preview-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px}
+.rit-preview-row.total{border-top:1px solid rgba(0,0,0,.08);margin-top:4px;padding-top:8px;font-family:'Playfair Display',serif;font-size:15px}
+.rit-card{background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.rit-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.rit-card-left .rit-periodo{font-family:'Playfair Display',serif;font-size:15px;color:var(--textl);font-weight:600}
+.rit-card-left .rit-comm{font-size:10px;color:#9a9080;margin-top:2px;letter-spacing:.5px}
+.rit-card-right{text-align:right}
+.rit-netto{font-family:'Playfair Display',serif;font-size:17px;color:var(--green2);font-weight:700}
+.rit-trattenuta{font-size:10px;color:var(--red);margin-top:2px}
+.rit-card-actions{display:flex;gap:6px}
+.rit-btn-pdf{flex:1;padding:7px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#141a16;border:none;border-radius:8px;font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;font-weight:bold}
+.rit-btn-pdf:active{opacity:.8}
+.rit-btn-del{padding:7px 11px;background:rgba(192,96,96,.06);border:1px solid rgba(192,96,96,.15);border-radius:8px;font-family:'Courier Prime',monospace;font-size:10px;color:rgba(200,130,130,.7);cursor:pointer}
+.rit-btn-del:active{background:rgba(192,96,96,.2);color:#e08080}
+.rit-anno-sep{display:flex;align-items:center;gap:11px;margin:14px 0 8px}
+.rit-anno-sep span{font-size:9px;letter-spacing:4px;color:rgba(160,130,50,.5);text-transform:uppercase}
+.rit-anno-sep hr{flex:1;border:none;border-top:1px solid rgba(0,0,0,.07)}
+.rit-totale-bar{background:linear-gradient(135deg,rgba(184,146,42,.08),rgba(184,146,42,.04));border:1px solid rgba(184,146,42,.18);border-radius:10px;padding:10px 13px;margin-bottom:14px}
+.rit-tot-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0}
+.rit-tot-row.bold{font-family:'Playfair Display',serif;font-size:14px;border-top:1px solid rgba(0,0,0,.07);margin-top:4px;padding-top:7px}
+.comm-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.07)}
+.comm-item:last-child{border-bottom:none}
+.comm-nome{font-size:13px;color:var(--textl);font-weight:500}
+.comm-dettagli{font-size:10px;color:#9a9080;margin-top:2px}
+.comm-del{background:none;border:none;cursor:pointer;color:rgba(200,130,130,.6);font-size:15px;padding:4px}
+.btn-rit-add{width:100%;background:linear-gradient(135deg,#5a7a5a,#4a6a4a);color:#e8f0e8;border:none;border-radius:12px;padding:12px;cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Courier Prime',monospace;transition:all .18s;margin-bottom:0}
+.btn-rit-add:active{opacity:.82;transform:scale(.98)}
+.btn-csv{background:none;border:1px solid #9a9080;border-radius:7px;padding:5px 10px;font-family:'Courier Prime',monospace;font-size:9px;color:#9a9080;cursor:pointer;letter-spacing:1px}
+.btn-csv:active{opacity:.7}
+.empty-msg{text-align:center;padding:22px 0;font-size:11px;color:#334;letter-spacing:2px}
 </style>
 </head>
 <body>
@@ -353,6 +372,70 @@ select.inp{cursor:pointer}
     </div>
   </div>
 
+  <!-- RITENUTE -->
+  <div class="panel" id="panel-ritenute">
+
+    <!-- I MIEI DATI -->
+    <div class="rit-section" style="border-top:2px solid rgba(184,146,42,.3)">
+      <div class="rit-section-lbl">👤 I miei dati (percettore)</div>
+      <input class="rit-inp" id="rp-nome" type="text" placeholder="Nome e Cognome" oninput="mioProfilO.nome=this.value;saveData()">
+      <input class="rit-inp" id="rp-cf" type="text" placeholder="Codice Fiscale" style="margin-bottom:0" oninput="mioProfilO.cf=this.value;saveData()">
+    </div>
+
+    <!-- COMMITTENTI -->
+    <div class="rit-section">
+      <div class="rit-section-lbl">🏢 Committenti</div>
+      <div id="lista-committenti"></div>
+      <div style="border-top:1px solid rgba(0,0,0,.08);padding-top:12px;margin-top:4px">
+        <div style="font-size:9px;letter-spacing:2px;color:#9a9080;text-transform:uppercase;margin-bottom:8px">Aggiungi committente</div>
+        <input class="rit-inp" id="nc-nome" type="text" placeholder="Nome / Ragione sociale">
+        <input class="rit-inp" id="nc-piva" type="text" placeholder="CF / P.IVA">
+        <input class="rit-inp" id="nc-ind" type="text" placeholder="Indirizzo" style="margin-bottom:10px">
+        <button class="btn-s" style="margin-bottom:0" onclick="addCommittente()">+ Aggiungi committente</button>
+      </div>
+    </div>
+
+    <!-- NUOVA RITENUTA -->
+    <div class="rit-section" style="border-top:2px solid rgba(90,122,90,.3)">
+      <div class="rit-section-lbl">➕ Nuova ritenuta</div>
+      <select class="rit-inp" id="nr-committente">
+        <option value="">— Seleziona committente —</option>
+      </select>
+      <div class="rit-inp-grid">
+        <select class="rit-inp" id="nr-mese">
+          <option value="">Mese</option>
+        </select>
+        <input class="rit-inp" id="nr-anno" type="number" placeholder="Anno" value="2026">
+      </div>
+      <input class="rit-inp" id="nr-lordo" type="number" placeholder="Importo lordo (€)" step="0.01" oninput="aggiornaCalcolo()">
+      <div class="rit-preview" id="nr-preview">
+        <div class="rit-preview-row">
+          <span>Imponibile lordo</span>
+          <span id="pv-lordo" style="color:var(--textl)"></span>
+        </div>
+        <div class="rit-preview-row">
+          <span style="color:var(--red)">Ritenuta 20%</span>
+          <span id="pv-ritenuta" style="color:var(--red)"></span>
+        </div>
+        <div class="rit-preview-row total">
+          <span>Netto percepito</span>
+          <span id="pv-netto" style="color:var(--green2)"></span>
+        </div>
+      </div>
+      <button class="btn-rit-add" onclick="addRitenuta()">✓ REGISTRA RITENUTA</button>
+    </div>
+
+    <!-- STORICO RITENUTE -->
+    <div class="rit-section" style="margin-bottom:80px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="rit-section-lbl" style="margin-bottom:0">📋 Storico</div>
+        <button class="btn-csv" onclick="exportCSV()">⬇ CSV</button>
+      </div>
+      <div id="lista-ritenute"></div>
+    </div>
+
+  </div>
+
 </div>
 
 <nav class="bottom-nav">
@@ -360,6 +443,7 @@ select.inp{cursor:pointer}
   <button class="nav-btn" data-tab="nominativi"><span class="nav-icon">👥</span><span class="nav-label">Lead</span></button>
   <button class="nav-btn" data-tab="aggiungi"><span class="nav-icon">＋</span><span class="nav-label">Aggiungi</span></button>
   <button class="nav-btn" data-tab="storico"><span class="nav-icon">◉</span><span class="nav-label">Storico</span></button>
+  <button class="nav-btn" data-tab="ritenute"><span class="nav-icon">📄</span><span class="nav-label">Ritenute</span></button>
 </nav>
 
 </div>
@@ -395,6 +479,9 @@ let dati = {
 };
 
 let nominativi = [];
+let ritenute = [];
+let committenti = [];
+let mioProfilO = {nome:'', cf:''};
 let selAnno = "2026", selMese = "Marzo";
 let chkLuce = false, chkGas = false;
 let curTab = "home";
@@ -410,29 +497,40 @@ function pct(){ return Math.min(100, (avgM() / OBJ) * 100); }
 function mG(a,m){ return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0); }
 function mC(a,m){ return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.gas), 0); }
 function nowDate(){ return new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
+function fmt(n){ return '€ ' + parseFloat(n).toFixed(2).replace('.',','); }
 
 /* STORAGE */
-function saveData(){
+function _saveToLocal(){
   try {
     localStorage.setItem('ne_dati', JSON.stringify(dati));
     localStorage.setItem('ne_nom', JSON.stringify(nominativi));
+    localStorage.setItem('ne_ritenute', JSON.stringify(ritenute));
+    localStorage.setItem('ne_committenti', JSON.stringify(committenti));
+    localStorage.setItem('ne_profilo', JSON.stringify(mioProfilO));
   } catch(e){}
 }
 function loadData(){
   try {
-    const d = localStorage.getItem('ne_dati');
-    const n = localStorage.getItem('ne_nom');
-    if(d) dati = JSON.parse(d);
-    if(n) nominativi = JSON.parse(n);
+    const d  = localStorage.getItem('ne_dati');
+    const n  = localStorage.getItem('ne_nom');
+    const r  = localStorage.getItem('ne_ritenute');
+    const co = localStorage.getItem('ne_committenti');
+    const pr = localStorage.getItem('ne_profilo');
+    if(d)  dati        = JSON.parse(d);
+    if(n)  nominativi  = JSON.parse(n);
+    if(r)  ritenute    = JSON.parse(r);
+    if(co) committenti = JSON.parse(co);
+    if(pr) mioProfilO  = JSON.parse(pr);
   } catch(e){}
 }
 
 /* RENDER DISPATCH */
 function render(){
-  if(curTab === 'home') renderHome();
+  if(curTab === 'home')       renderHome();
   else if(curTab === 'nominativi') renderNom();
-  else if(curTab === 'aggiungi') renderAgg();
-  else if(curTab === 'storico') renderStorico();
+  else if(curTab === 'aggiungi')   renderAgg();
+  else if(curTab === 'storico')    renderStorico();
+  else if(curTab === 'ritenute')   renderRitenute();
 }
 
 /* HOME */
@@ -513,10 +611,7 @@ function renderNom(){
   }).join('');
 }
 
-function toggleOpen(id){
-  nomOpenId = (nomOpenId === id) ? null : id;
-  renderNom();
-}
+function toggleOpen(id){ nomOpenId = (nomOpenId === id) ? null : id; renderNom(); }
 
 function addNom(){
   const v = document.getElementById('nomInput').value.trim();
@@ -540,19 +635,9 @@ function toggleNomField(i, field){
       const mese = MESI[d.getMonth()];
       if(!dati[anno]) dati[anno] = {};
       if(!dati[anno][mese]) dati[anno][mese] = [];
-      dati[anno][mese].push({
-        nome: n.nome,
-        luce: n.luce ? 1 : 0,
-        gas: n.gas ? 1 : 0,
-        prov: n.prov || 0,
-        paid: false,
-        paidDate: null,
-        fromLead: true
-      });
+      dati[anno][mese].push({nome: n.nome, luce: n.luce ? 1 : 0, gas: n.gas ? 1 : 0, prov: n.prov || 0, paid: false, paidDate: null, fromLead: true});
     }
-  } else {
-    n[field] = !n[field];
-  }
+  } else { n[field] = !n[field]; }
   saveData();
   renderNom();
 }
@@ -573,7 +658,6 @@ function renderAgg(){
   document.getElementById('periodPills').innerHTML = pills;
   document.getElementById('insertLabel').textContent = selMese + ' ' + selAnno;
   updateChkUI();
-
   const list = dati[selAnno]?.[selMese] || [];
   const totG = list.reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0);
   const totC = list.reduce((s,c) => s + (c.luce + c.gas), 0);
@@ -610,12 +694,7 @@ function updateChkUI(){
   g.className = 'chk-tog' + (chkGas ? ' on-gas' : '');
 }
 
-function toggleCheck(t){
-  if(t === 'luce') chkLuce = !chkLuce;
-  else chkGas = !chkGas;
-  updateChkUI();
-}
-
+function toggleCheck(t){ if(t === 'luce') chkLuce = !chkLuce; else chkGas = !chkGas; updateChkUI(); }
 function selPeriod(a, m){ selAnno = a; selMese = m; renderAgg(); }
 
 function addPeriod(){
@@ -653,19 +732,13 @@ function togglePaid(a, m, i){
   renderAgg();
 }
 
-function rmSel(i){
-  dati[selAnno][selMese].splice(i, 1);
-  saveData();
-  render();
-}
+function rmSel(i){ dati[selAnno][selMese].splice(i, 1); saveData(); render(); }
 
 /* STORICO */
 function renderStorico(){
   let html = '';
   const years = Object.keys(dati).sort();
-  if(!years.length){
-    html = '<div style="text-align:center;padding:28px;font-size:11px;color:#9a9080">Nessun contratto</div>';
-  }
+  if(!years.length){ html = '<div style="text-align:center;padding:28px;font-size:11px;color:#9a9080">Nessun contratto</div>'; }
   years.forEach(anno => {
     html += `<div class="ysep"><span>${anno}</span><hr></div>`;
     Object.keys(dati[anno]).sort((a,b) => MESI.indexOf(a) - MESI.indexOf(b)).forEach(mese => {
@@ -689,10 +762,7 @@ function renderStorico(){
       });
       html += `<div class="mblock">
         <div class="mblock-head">
-          <div>
-            <div class="mblock-title">${mese}</div>
-            <div class="mblock-sub">${nc} contratti</div>
-          </div>
+          <div><div class="mblock-title">${mese}</div><div class="mblock-sub">${nc} contratti</div></div>
           <div class="mblock-earn">€${tg}</div>
         </div>
         ${rows}
@@ -700,7 +770,6 @@ function renderStorico(){
     });
   });
   document.getElementById('storicoContent').innerHTML = html;
-
   let ph = '';
   proj.forEach(p => {
     const m2 = Math.round(p.guadagno / 12);
@@ -710,25 +779,254 @@ function renderStorico(){
     ph += `<div class="prow" style="background:${ok ? 'linear-gradient(135deg,#dff0df,#d4e8d4)' : 'linear-gradient(135deg,#eee8de,#e8e0d4)'};border:1px solid ${ok ? 'rgba(82,168,122,.18)' : 'rgba(0,0,0,.06)'};border-left:3px solid ${ok ? '#52a87a' : 'rgba(201,168,76,.3)'}">
       <div class="pyear" style="color:${ok ? '#52a87a' : 'var(--textl)'};font-weight:${ok ? 700 : 300}">${p.anno}</div>
       <div class="pbody">
-        <div class="pmeta">
-          <span>${p.contratti} contratti</span>
-          <span class="${ok ? 'ok' : ''}">${ok ? '✓ Obiettivo!' : '€' + (OBJ - m2) + ' mancanti'}</span>
-        </div>
+        <div class="pmeta"><span>${p.contratti} contratti</span><span class="${ok ? 'ok' : ''}">${ok ? '✓ Obiettivo!' : '€' + (OBJ - m2) + ' mancanti'}</span></div>
         <div class="pprog-bg"><div class="pprog-fill" style="width:${pp}%;background:${fill}"></div></div>
       </div>
-      <div class="pearn">
-        <div class="pearn-val" style="color:${ok ? '#52a87a' : 'var(--gold)'}">€${m2}</div>
-        <div class="pearn-sub">/mese</div>
-      </div>
+      <div class="pearn"><div class="pearn-val" style="color:${ok ? '#52a87a' : 'var(--gold)'}">€${m2}</div><div class="pearn-sub">/mese</div></div>
     </div>`;
   });
   document.getElementById('projRows').innerHTML = ph;
 }
 
-function rmClient(a, m, i){
-  dati[a][m].splice(i, 1);
+function rmClient(a, m, i){ dati[a][m].splice(i, 1); saveData(); render(); }
+
+/* ── RITENUTE ───────────────────────────────────────────── */
+function renderRitenute(){
+  // Ripristina campi profilo
+  document.getElementById('rp-nome').value = mioProfilO.nome || '';
+  document.getElementById('rp-cf').value   = mioProfilO.cf   || '';
+  // Popola select mesi
+  const selMeseEl = document.getElementById('nr-mese');
+  const curMese = selMeseEl.value;
+  selMeseEl.innerHTML = '<option value="">Mese</option>' +
+    MESI.map(m => `<option value="${m}"${m===curMese?' selected':''}>${m}</option>`).join('');
+  // Aggiorna committenti
+  renderSelectCommittenti();
+  renderListaCommittenti();
+  renderListaRitenute();
+}
+
+function renderSelectCommittenti(){
+  const sel = document.getElementById('nr-committente');
+  if(!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Seleziona committente —</option>' +
+    committenti.map((c,i) => `<option value="${i}">${c.nome}</option>`).join('');
+  if(cur !== '') sel.value = cur;
+}
+
+function renderListaCommittenti(){
+  const el = document.getElementById('lista-committenti');
+  if(!el) return;
+  if(!committenti.length){
+    el.innerHTML = '<div class="empty-msg" style="padding:10px 0;font-size:10px">Nessun committente salvato</div>';
+    return;
+  }
+  el.innerHTML = committenti.map((c,i) => `
+    <div class="comm-item">
+      <div>
+        <div class="comm-nome">${c.nome}</div>
+        <div class="comm-dettagli">${c.piva ? c.piva : ''}${c.piva && c.ind ? ' · ' : ''}${c.ind ? c.ind : ''}</div>
+      </div>
+      <button class="comm-del" onclick="rmCommittente(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addCommittente(){
+  const nome = document.getElementById('nc-nome').value.trim();
+  const piva = document.getElementById('nc-piva').value.trim();
+  const ind  = document.getElementById('nc-ind').value.trim();
+  if(!nome){ alert('Inserisci almeno il nome del committente.'); return; }
+  committenti.push({nome, piva, ind});
   saveData();
-  render();
+  document.getElementById('nc-nome').value = '';
+  document.getElementById('nc-piva').value = '';
+  document.getElementById('nc-ind').value  = '';
+  renderSelectCommittenti();
+  renderListaCommittenti();
+}
+
+function rmCommittente(i){
+  if(!confirm('Rimuovere questo committente?')) return;
+  committenti.splice(i, 1);
+  saveData();
+  renderSelectCommittenti();
+  renderListaCommittenti();
+}
+
+function aggiornaCalcolo(){
+  const lordo = parseFloat(document.getElementById('nr-lordo').value);
+  const prev  = document.getElementById('nr-preview');
+  if(!lordo || lordo <= 0){ prev.style.display = 'none'; return; }
+  const ritenuta = lordo * 0.20;
+  const netto    = lordo - ritenuta;
+  document.getElementById('pv-lordo').textContent    = fmt(lordo);
+  document.getElementById('pv-ritenuta').textContent = '- ' + fmt(ritenuta);
+  document.getElementById('pv-netto').textContent    = fmt(netto);
+  prev.style.display = 'block';
+}
+
+function addRitenuta(){
+  const ci    = document.getElementById('nr-committente').value;
+  const mese  = document.getElementById('nr-mese').value;
+  const anno  = document.getElementById('nr-anno').value;
+  const lordo = parseFloat(document.getElementById('nr-lordo').value);
+  if(ci === '' || !mese || !anno || !lordo || lordo <= 0){
+    alert('Compila tutti i campi: committente, mese, anno e importo lordo.');
+    return;
+  }
+  const c        = committenti[parseInt(ci)];
+  const ritenuta = parseFloat((lordo * 0.20).toFixed(2));
+  const netto    = parseFloat((lordo - ritenuta).toFixed(2));
+  ritenute.push({
+    id: Date.now(),
+    committente: {...c},
+    mese,
+    anno: parseInt(anno),
+    lordo,
+    ritenuta,
+    netto,
+    data: new Date().toLocaleDateString('it-IT')
+  });
+  saveData();
+  document.getElementById('nr-lordo').value = '';
+  document.getElementById('nr-preview').style.display = 'none';
+  renderListaRitenute();
+}
+
+function renderListaRitenute(){
+  const el = document.getElementById('lista-ritenute');
+  if(!el) return;
+  if(!ritenute.length){
+    el.innerHTML = '<div class="empty-msg">Nessuna ritenuta registrata</div>';
+    return;
+  }
+  const byAnno = {};
+  ritenute.forEach(r => { if(!byAnno[r.anno]) byAnno[r.anno] = []; byAnno[r.anno].push(r); });
+  el.innerHTML = Object.keys(byAnno).sort((a,b) => b - a).map(anno => {
+    const list        = byAnno[anno];
+    const totLordo    = list.reduce((s,r) => s + r.lordo, 0);
+    const totRitenuta = list.reduce((s,r) => s + r.ritenuta, 0);
+    const totNetto    = list.reduce((s,r) => s + r.netto, 0);
+    const cards       = list.map(r => `
+      <div class="rit-card">
+        <div class="rit-card-head">
+          <div class="rit-card-left">
+            <div class="rit-periodo">${r.mese} ${r.anno}</div>
+            <div class="rit-comm">${r.committente.nome}</div>
+          </div>
+          <div class="rit-card-right">
+            <div class="rit-netto">${fmt(r.netto)}</div>
+            <div class="rit-trattenuta">- ${fmt(r.ritenuta)} trattenuta</div>
+          </div>
+        </div>
+        <div class="rit-card-actions">
+          <button class="rit-btn-pdf" onclick="stampaPDF(${r.id})">🖨 Stampa PDF</button>
+          <button class="rit-btn-del" onclick="rmRitenuta(${r.id})">✕</button>
+        </div>
+      </div>`).join('');
+    return `<div class="rit-anno-sep"><span>${anno}</span><hr></div>
+      ${cards}
+      <div class="rit-totale-bar">
+        <div class="rit-tot-row"><span style="color:#9a9080">Totale lordo</span><span>${fmt(totLordo)}</span></div>
+        <div class="rit-tot-row"><span style="color:var(--red)">Totale ritenute</span><span style="color:var(--red)">- ${fmt(totRitenuta)}</span></div>
+        <div class="rit-tot-row bold"><span>Totale netto ${anno}</span><span style="color:var(--green2)">${fmt(totNetto)}</span></div>
+      </div>`;
+  }).join('');
+}
+
+function rmRitenuta(id){
+  if(!confirm('Eliminare questa ritenuta?')) return;
+  ritenute = ritenute.filter(r => r.id !== id);
+  saveData();
+  renderListaRitenute();
+}
+
+function stampaPDF(id){
+  const r = ritenute.find(x => x.id === id);
+  if(!r) return;
+  const win = window.open('', '_blank', 'width=720,height=960');
+  win.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8">
+<title>Ricevuta Ritenuta — ${r.mese} ${r.anno}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:#2c2c2c;background:#fff;padding:52px 56px;max-width:680px;margin:0 auto}
+  .header{border-bottom:2px solid #1a3c5e;padding-bottom:16px;margin-bottom:28px}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .doc-title{font-size:22px;font-weight:700;letter-spacing:1px;color:#1a3c5e;text-transform:uppercase}
+  .doc-sub{font-size:12px;color:#888;margin-top:3px;letter-spacing:.5px}
+  .doc-date{font-size:11px;color:#aaa;text-align:right}
+  .periodo-badge{display:inline-block;background:#1a3c5e;color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;letter-spacing:.5px;margin-top:16px}
+  .parties{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:28px 0}
+  .party-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px}
+  .party-name{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
+  .party-detail{font-size:12px;color:#666;line-height:1.6}
+  .calc-table{width:100%;border-collapse:collapse;margin:28px 0}
+  .calc-table td{padding:11px 14px;font-size:14px}
+  .calc-table tr:not(:last-child) td{border-bottom:1px solid #f0f0f0}
+  .calc-table .row-lordo{background:#fafafa}
+  .calc-table .row-ritenuta{background:#fff5f5}
+  .calc-table .row-ritenuta .val{color:#c0392b;font-weight:600}
+  .calc-table .row-netto{background:#f0f9f0}
+  .calc-table .row-netto .lbl{font-weight:700;font-size:16px;color:#1a3c5e}
+  .calc-table .row-netto .val{font-weight:800;font-size:20px;color:#27ae60}
+  .lbl{color:#555}
+  .val{text-align:right;font-weight:500}
+  .footer{margin-top:36px;padding-top:16px;border-top:1px solid #eee;font-size:10px;color:#bbb;line-height:1.8}
+  @media print{body{padding:30px 40px}@page{margin:1cm}}
+</style></head><body>
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="doc-title">Ricevuta di pagamento</div>
+      <div class="doc-sub">Ritenuta d'acconto — Art. 25 DPR 600/1973</div>
+    </div>
+    <div class="doc-date">Data registrazione<br><strong>${r.data}</strong></div>
+  </div>
+  <div class="periodo-badge">${r.mese} ${r.anno}</div>
+</div>
+<div class="parties">
+  <div>
+    <div class="party-lbl">Percettore (lavoratore autonomo)</div>
+    <div class="party-name">${mioProfilO.nome || '—'}</div>
+    <div class="party-detail">${mioProfilO.cf ? 'C.F.: ' + mioProfilO.cf : ''}</div>
+  </div>
+  <div>
+    <div class="party-lbl">Committente (sostituto d'imposta)</div>
+    <div class="party-name">${r.committente.nome}</div>
+    <div class="party-detail">
+      ${r.committente.piva ? 'CF/P.IVA: ' + r.committente.piva + '<br>' : ''}
+      ${r.committente.ind || ''}
+    </div>
+  </div>
+</div>
+<table class="calc-table">
+  <tr class="row-lordo"><td class="lbl">Compenso lordo pattuito</td><td class="val">${fmt(r.lordo)}</td></tr>
+  <tr class="row-ritenuta"><td class="lbl">Ritenuta d'acconto (20%)</td><td class="val">− ${fmt(r.ritenuta)}</td></tr>
+  <tr class="row-netto"><td class="lbl">Netto percepito</td><td class="val">${fmt(r.netto)}</td></tr>
+</table>
+<div class="footer">
+  La ritenuta d'acconto (${fmt(r.ritenuta)}) sarà versata dal committente all'Erario tramite Mod. F24 entro il 16 del mese successivo al pagamento. &nbsp;·&nbsp;
+  La presente ricevuta non costituisce fattura. &nbsp;·&nbsp;
+  Rif. normativo: Art. 25 D.P.R. 600/1973.
+</div>
+<script>window.onload = () => { window.print(); }<\/script>
+</body></html>`);
+  win.document.close();
+}
+
+function exportCSV(){
+  if(!ritenute.length){ alert('Nessuna ritenuta da esportare.'); return; }
+  const header = 'Mese;Anno;Committente;CF-PIVA;Lordo (EUR);Ritenuta 20% (EUR);Netto (EUR);Data registrazione';
+  const rows = ritenute.map(r =>
+    `${r.mese};${r.anno};"${r.committente.nome}";"${r.committente.piva || ''}";${r.lordo.toFixed(2)};${r.ritenuta.toFixed(2)};${r.netto.toFixed(2)};${r.data}`
+  );
+  const csv  = '\uFEFF' + [header, ...rows].join('\n'); // BOM per Excel italiano
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'ritenute_acconto.csv'; a.click();
+  URL.revokeObjectURL(url);
 }
 
 /* NAV */
@@ -747,10 +1045,10 @@ render();
 
 /* GOOGLE DRIVE SYNC */
 const CLIENT_ID = '522433674352-5kmtu2n6idve7e14sruh4vs8cub77n33.apps.googleusercontent.com';
-const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
+const SCOPES    = 'https://www.googleapis.com/auth/drive.appdata';
 const FILE_NAME = 'newenergy_backup.json';
 
-let gToken = null;
+let gToken      = null;
 let driveFileId = localStorage.getItem('ne_drive_file_id') || null;
 let syncTimeout = null;
 
@@ -758,7 +1056,7 @@ function setSyncStatus(status, msg){
   const dot = document.getElementById('syncDot');
   const lbl = document.getElementById('syncLabel');
   if(!dot) return;
-  dot.className = 'sync-dot ' + status;
+  dot.className  = 'sync-dot ' + status;
   lbl.textContent = msg;
 }
 
@@ -780,8 +1078,7 @@ function gdriveLogin(){
 }
 
 function gdriveLogout(){
-  gToken = null;
-  driveFileId = null;
+  gToken = null; driveFileId = null;
   localStorage.removeItem('ne_gdrive_token');
   localStorage.removeItem('ne_drive_file_id');
   document.getElementById('gdrive-login-bar').style.display = 'flex';
@@ -792,80 +1089,65 @@ async function syncNow(){
   if(!gToken) return;
   setSyncStatus('syncing','Salvataggio...');
   try {
-    const payload = JSON.stringify({dati, nominativi, ts: Date.now()});
+    const payload = JSON.stringify({dati, nominativi, ritenute, committenti, mioProfilO, ts: Date.now()});
     if(driveFileId){
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
-        method:'PATCH',
-        headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-        body: payload
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,{
+        method:'PATCH', headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'}, body:payload
       });
     } else {
-      // Search for existing file
-      const search = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${FILE_NAME}'`, {
-        headers:{'Authorization':'Bearer '+gToken}
-      });
-      const sData = await search.json();
+      const search = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${FILE_NAME}'`,{headers:{'Authorization':'Bearer '+gToken}});
+      const sData  = await search.json();
       if(sData.files && sData.files.length > 0){
         driveFileId = sData.files[0].id;
         localStorage.setItem('ne_drive_file_id', driveFileId);
-        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
-          method:'PATCH',
-          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-          body: payload
+        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,{
+          method:'PATCH', headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'}, body:payload
         });
       } else {
-        // Create new file
-        const meta = await fetch('https://www.googleapis.com/drive/v3/files', {
-          method:'POST',
-          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
+        const meta  = await fetch('https://www.googleapis.com/drive/v3/files',{
+          method:'POST', headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
           body: JSON.stringify({name: FILE_NAME, parents:['appDataFolder']})
         });
         const mData = await meta.json();
         driveFileId = mData.id;
         localStorage.setItem('ne_drive_file_id', driveFileId);
-        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
-          method:'PATCH',
-          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-          body: payload
+        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,{
+          method:'PATCH', headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'}, body:payload
         });
       }
     }
     const now = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Salvato alle ' + now);
-  } catch(e){
-    setSyncStatus('err','Errore salvataggio');
-  }
+  } catch(e){ setSyncStatus('err','Errore salvataggio'); }
 }
 
 async function loadFromDrive(){
   if(!gToken || !driveFileId) return;
   try {
-    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${driveFileId}?alt=media`, {
-      headers:{'Authorization':'Bearer '+gToken}
-    });
+    const res  = await fetch(`https://www.googleapis.com/drive/v3/files/${driveFileId}?alt=media`,{headers:{'Authorization':'Bearer '+gToken}});
     const data = await res.json();
-    if(data.dati) dati = data.dati;
-    if(data.nominativi) nominativi = data.nominativi;
+    if(data.dati)        dati        = data.dati;
+    if(data.nominativi)  nominativi  = data.nominativi;
+    if(data.ritenute)    ritenute    = data.ritenute;
+    if(data.committenti) committenti = data.committenti;
+    if(data.mioProfilO)  mioProfilO  = data.mioProfilO;
     saveData();
     render();
     const now = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Ripristinato alle ' + now);
-  } catch(e){
-    setSyncStatus('err','Errore caricamento');
-  }
+  } catch(e){ setSyncStatus('err','Errore caricamento'); }
 }
 
-// Auto-sync after data changes
-const _origSaveData = saveData;
+// saveData con auto-sync Drive
 function saveData(){
-  _origSaveData();
+  _saveToLocal();
   if(gToken){
     clearTimeout(syncTimeout);
     syncTimeout = setTimeout(syncNow, 2000);
   }
 }
 
-// Try restore token on load
+// Ripristino token al caricamento
 window.addEventListener('load', () => {
   const saved = localStorage.getItem('ne_gdrive_token');
   if(saved){
