@@ -7,6 +7,10 @@ const proj = [
   {anno:2028,contratti:160,guadagno:7200},
 ];
 
+// FIX: gToken dichiarato in cima insieme alle altre variabili globali
+let gToken = null;
+let driveFileId = localStorage.getItem('ne_drive_file_id') || null;
+
 let dati = {
   2025:{Dicembre:[
     {id:'c1',nome:"Giuseppe D'Atri",luce:1,gas:0,prov:40,paid:false,paidDate:null},
@@ -33,32 +37,49 @@ let curTab = "home";
 let nomOpenId = null;
 
 /* UTILS */
-function genId(){ return 'c' + Date.now() + Math.random().toString(36).slice(2,6); }
-function allC(){ return Object.values(dati).flatMap(a => Object.values(a).flat()); }
-function totalC(){ return allC().reduce((s,c) => s + (c.luce + c.gas), 0); }
-function totalG(){ return allC().reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0); }
-function totalMonths(){ return Object.values(dati).flatMap(a => Object.keys(a)).length; }
-function avgM(){ return Math.round(totalG() / Math.max(1, totalMonths())); }
-function pct(){ return Math.min(100, (avgM() / OBJ) * 100); }
-function mG(a,m){ return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0); }
-function mC(a,m){ return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.gas), 0); }
-function nowDate(){ return new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
+function genId(){
+  return 'c' + Date.now() + Math.random().toString(36).slice(2,6);
+}
+function allC(){
+  return Object.values(dati).flatMap(a => Object.values(a).flat());
+}
+function totalC(){
+  return allC().reduce((s,c) => s + (c.luce + c.gas), 0);
+}
+function totalG(){
+  return allC().reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0);
+}
+function totalMonths(){
+  return Object.values(dati).flatMap(a => Object.keys(a)).length;
+}
+function avgM(){
+  return Math.round(totalG() / Math.max(1, totalMonths()));
+}
+function pct(){
+  return Math.min(100, (avgM() / OBJ) * 100);
+}
+function mG(a,m){
+  return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.gas) * c.prov, 0);
+}
+function mC(a,m){
+  return (dati[a]?.[m] || []).reduce((s,c) => s + (c.luce + c.gas), 0);
+}
+function nowDate(){
+  return new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'});
+}
 
 /* STORAGE */
-// FIX: saveData unica, con logica auto-sync integrata direttamente
 let syncTimeout = null;
 function saveData(){
   try {
     localStorage.setItem('ne_dati', JSON.stringify(dati));
     localStorage.setItem('ne_nom', JSON.stringify(nominativi));
   } catch(e){}
-  // Auto-sync Google Drive dopo 2s dall'ultima modifica
   if(gToken){
     clearTimeout(syncTimeout);
     syncTimeout = setTimeout(syncNow, 2000);
   }
 }
-
 function loadData(){
   try {
     const d = localStorage.getItem('ne_dati');
@@ -104,16 +125,21 @@ function renderHome(){
 function renderNom(){
   const el = document.getElementById('nomList');
   const em = document.getElementById('nomEmpty');
-  if(!nominativi.length){ el.innerHTML = ''; em.style.display = 'block'; return; }
+  if(!nominativi.length){
+    el.innerHTML = '';
+    em.style.display = 'block';
+    return;
+  }
   em.style.display = 'none';
-  el.innerHTML = nominativi.map((n, i) => {
+  // FIX: uso n.id (stringa) invece di i (indice) in tutti gli onclick
+  el.innerHTML = nominativi.map((n) => {
     const isOpen = nomOpenId === n.id;
     const provDisplay = n.prov ? '€' + n.prov : '';
     const luceGasIcons = (n.luce || n.gas)
       ? `<div style="display:flex;gap:3px;flex-shrink:0">${n.luce ? '<span style="font-size:13px">☀️</span>' : ''}${n.gas ? '<span style="font-size:13px">🔥</span>' : ''}</div>`
       : '';
     return `<div class="nom-card ${isOpen ? 'open' : ''}" id="nomcard-${n.id}">
-      <div class="nom-card-header" onclick="toggleOpen(${n.id})">
+      <div class="nom-card-header" onclick="toggleOpen('${n.id}')">
         <div class="nom-dots">
           <div class="ndot ${n.co ? 'on-co' : ''}"></div>
           <div class="ndot ${n.dc ? 'on-dc' : ''}"></div>
@@ -126,28 +152,28 @@ function renderNom(){
       </div>
       <div class="nom-card-body">
         <div class="nom-steps">
-          <div class="nstep ${n.co ? 'active-co' : ''}" onclick="toggleNomField(${i},'co')">
+          <div class="nstep ${n.co ? 'active-co' : ''}" onclick="toggleNomField('${n.id}','co')">
             <div class="nstep-icon">${n.co ? '✓' : '○'}</div>
             <div class="nstep-lbl">Contattato</div>
           </div>
-          <div class="nstep ${n.dc ? 'active-dc' : ''}" onclick="toggleNomField(${i},'dc')">
+          <div class="nstep ${n.dc ? 'active-dc' : ''}" onclick="toggleNomField('${n.id}','dc')">
             <div class="nstep-icon">${n.dc ? '✓' : '○'}</div>
             <div class="nstep-lbl">Documenti</div>
           </div>
-          <div class="nstep ${n.sent ? 'active-sent' : ''}" onclick="toggleNomField(${i},'sent')">
+          <div class="nstep ${n.sent ? 'active-sent' : ''}" onclick="toggleNomField('${n.id}','sent')">
             <div class="nstep-icon">${n.sent ? '🤩' : '○'}</div>
             <div class="nstep-lbl">Inviato</div>
           </div>
         </div>
         <div class="nom-toggles">
-          <div class="ntog ${n.luce ? 'on-luce' : ''}" onclick="toggleNomField(${i},'luce')">☀️ Luce</div>
-          <div class="ntog ${n.gas ? 'on-gas' : ''}" onclick="toggleNomField(${i},'gas')">🔥 Gas</div>
+          <div class="ntog ${n.luce ? 'on-luce' : ''}" onclick="toggleNomField('${n.id}','luce')">☀️ Luce</div>
+          <div class="ntog ${n.gas ? 'on-gas' : ''}" onclick="toggleNomField('${n.id}','gas')">🔥 Gas</div>
         </div>
         <div class="nom-prov-row">
           <span class="nom-prov-lbl">€ PROVVIGIONE</span>
-          <input class="nom-prov-inp" type="number" placeholder="es. 45" value="${n.prov || ''}" onchange="updateProv(${i}, this.value)">
+          <input class="nom-prov-inp" type="number" placeholder="es. 45" value="${n.prov || ''}" onchange="updateProv('${n.id}', this.value)">
         </div>
-        <textarea class="nom-note" placeholder="Note sul cliente..." onchange="updateNote(${i}, this.value)">${n.note || ''}</textarea>
+        <textarea class="nom-note" placeholder="Note sul cliente..." onchange="updateNote('${n.id}', this.value)">${n.note || ''}</textarea>
         <div class="nom-footer">
           <button class="nrm" onclick="rmNom('${n.id}')">✕ Elimina</button>
         </div>
@@ -156,15 +182,17 @@ function renderNom(){
   }).join('');
 }
 
+// FIX: toggleOpen confronta stringhe con ===
 function toggleOpen(id){
   nomOpenId = (nomOpenId === id) ? null : id;
   renderNom();
 }
 
+// FIX: addNom usa genId() per avere id sempre stringa, coerente con il resto
 function addNom(){
   const v = document.getElementById('nomInput').value.trim();
   if(!v) return;
-  const n = {id: Date.now(), nome: v, co: false, dc: false, sent: false, sentDate: null, luce: false, gas: false, prov: 0, note: ''};
+  const n = {id: genId(), nome: v, co: false, dc: false, sent: false, sentDate: null, luce: false, gas: false, prov: 0, note: ''};
   nominativi.push(n);
   nomOpenId = n.id;
   document.getElementById('nomInput').value = '';
@@ -172,8 +200,10 @@ function addNom(){
   renderNom();
 }
 
-function toggleNomField(i, field){
-  const n = nominativi[i];
+// FIX: toggleNomField cerca per id invece di usare l'indice
+function toggleNomField(id, field){
+  const n = nominativi.find(x => x.id === id);
+  if(!n) return;
   if(field === 'sent'){
     n.sent = !n.sent;
     if(n.sent){
@@ -184,14 +214,9 @@ function toggleNomField(i, field){
       if(!dati[anno]) dati[anno] = {};
       if(!dati[anno][mese]) dati[anno][mese] = [];
       dati[anno][mese].push({
-        id: genId(),
-        nome: n.nome,
-        luce: n.luce ? 1 : 0,
-        gas: n.gas ? 1 : 0,
-        prov: n.prov || 0,
-        paid: false,
-        paidDate: null,
-        fromLead: true
+        id: genId(), nome: n.nome,
+        luce: n.luce ? 1 : 0, gas: n.gas ? 1 : 0,
+        prov: n.prov || 0, paid: false, paidDate: null, fromLead: true
       });
     }
   } else {
@@ -201,13 +226,22 @@ function toggleNomField(i, field){
   renderNom();
 }
 
-function updateNote(i, v){ nominativi[i].note = v; saveData(); }
-function updateProv(i, v){ nominativi[i].prov = parseFloat(v) || 0; saveData(); renderNom(); }
+// FIX: updateNote cerca per id
+function updateNote(id, v){
+  const n = nominativi.find(x => x.id === id);
+  if(n){ n.note = v; saveData(); }
+}
 
-// FIX: rmNom ora usa l'id univoco invece dell'indice
+// FIX: updateProv cerca per id
+function updateProv(id, v){
+  const n = nominativi.find(x => x.id === id);
+  if(n){ n.prov = parseFloat(v) || 0; saveData(); renderNom(); }
+}
+
+// FIX: rmNom usa === strict
 function rmNom(id){
-  nominativi = nominativi.filter(n => n.id != id);
-  if(nomOpenId == id) nomOpenId = null;
+  nominativi = nominativi.filter(n => n.id !== id);
+  if(nomOpenId === id) nomOpenId = null;
   saveData();
   renderNom();
 }
@@ -266,15 +300,21 @@ function toggleCheck(t){
   updateChkUI();
 }
 
-function selPeriod(a, m){ selAnno = String(a); selMese = m; renderAgg(); }
+function selPeriod(a, m){
+  selAnno = String(a);
+  selMese = m;
+  renderAgg();
+}
 
+// FIX: validazione anno aggiunta
 function addPeriod(){
   const y = document.getElementById('newYear').value.trim();
   const m = document.getElementById('newMonth').value;
-  if(!y || !m) return;
+  if(!y || !m || isNaN(y) || y.length !== 4) return;
   if(!dati[y]) dati[y] = {};
   if(!dati[y][m]) dati[y][m] = [];
-  selAnno = y; selMese = m;
+  selAnno = y;
+  selMese = m;
   document.getElementById('newYear').value = '';
   document.getElementById('newMonth').value = '';
   saveData();
@@ -288,22 +328,18 @@ function addClient(){
   if(!dati[selAnno]) dati[selAnno] = {};
   if(!dati[selAnno][selMese]) dati[selAnno][selMese] = [];
   dati[selAnno][selMese].push({
-    id: genId(),
-    nome: n,
-    luce: chkLuce ? 1 : 0,
-    gas: chkGas ? 1 : 0,
-    prov: pv,
-    paid: false,
-    paidDate: null
+    id: genId(), nome: n,
+    luce: chkLuce ? 1 : 0, gas: chkGas ? 1 : 0,
+    prov: pv, paid: false, paidDate: null
   });
   document.getElementById('clientName').value = '';
   document.getElementById('provInput').value = '';
-  chkLuce = false; chkGas = false;
+  chkLuce = false;
+  chkGas = false;
   saveData();
   render();
 }
 
-// FIX: togglePaid e rmSel ora usano l'id univoco
 function togglePaid(a, m, id){
   const c = (dati[a][m] || []).find(x => x.id === id);
   if(!c) return;
@@ -317,7 +353,12 @@ function rmSel(id){
   for(const anno of Object.keys(dati)){
     for(const mese of Object.keys(dati[anno])){
       const idx = dati[anno][mese].findIndex(x => x.id === id);
-      if(idx !== -1){ dati[anno][mese].splice(idx, 1); saveData(); render(); return; }
+      if(idx !== -1){
+        dati[anno][mese].splice(idx, 1);
+        saveData();
+        render();
+        return;
+      }
     }
   }
 }
@@ -326,7 +367,11 @@ function rmSel(id){
 function renderStorico(){
   let html = '';
   const years = Object.keys(dati).sort();
-  if(!years.length){ html = '<div style="text-align:center;padding:28px;font-size:11px;color:#9a9080">Nessun contratto</div>'; }
+  // FIX: return anticipato se non ci sono anni
+  if(!years.length){
+    document.getElementById('storicoContent').innerHTML = '<div style="text-align:center;padding:28px;font-size:11px;color:#9a9080">Nessun contratto</div>';
+    return;
+  }
   years.forEach(anno => {
     html += `<div class="ysep"><span>${anno}</span><hr></div>`;
     Object.keys(dati[anno]).sort((a,b) => MESI.indexOf(a) - MESI.indexOf(b)).forEach(mese => {
@@ -361,6 +406,7 @@ function renderStorico(){
     });
   });
   document.getElementById('storicoContent').innerHTML = html;
+
   let ph = '';
   proj.forEach(p => {
     const m2 = Math.round(p.guadagno / 12);
@@ -385,10 +431,13 @@ function renderStorico(){
   document.getElementById('projRows').innerHTML = ph;
 }
 
-// FIX: rmClient usa l'id univoco
 function rmClient(a, m, id){
   const idx = (dati[a]?.[m] || []).findIndex(x => x.id === id);
-  if(idx !== -1){ dati[a][m].splice(idx, 1); saveData(); render(); }
+  if(idx !== -1){
+    dati[a][m].splice(idx, 1);
+    saveData();
+    render();
+  }
 }
 
 /* NAV */
@@ -405,14 +454,10 @@ document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', (
 loadData();
 render();
 
-/* ───────────────────────────────────────────
-   GOOGLE DRIVE SYNC
-─────────────────────────────────────────── */
+/* ─────────────────────────────────────────── GOOGLE DRIVE SYNC ─────────────────────────────────────────── */
 const CLIENT_ID = '522433674352-5kmtu2n6idve7e14sruh4vs8cub77n33.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
 const FILE_NAME = 'newenergy_backup.json';
-let gToken = null;
-let driveFileId = localStorage.getItem('ne_drive_file_id') || null;
 
 function setSyncStatus(status, msg){
   const dot = document.getElementById('syncDot');
@@ -429,7 +474,7 @@ function gdriveLogin(){
     callback: async (resp) => {
       if(resp.error){ setSyncStatus('err','Errore accesso'); return; }
       gToken = resp.access_token;
-      localStorage.setItem('ne_gdrive_token', gToken);
+      // FIX: rimosso localStorage.setItem del token OAuth (sicurezza)
       document.getElementById('gdrive-login-bar').style.display = 'none';
       document.getElementById('sync-bar').style.display = 'flex';
       setSyncStatus('syncing','Connessione...');
@@ -442,13 +487,12 @@ function gdriveLogin(){
 function gdriveLogout(){
   gToken = null;
   driveFileId = null;
-  localStorage.removeItem('ne_gdrive_token');
   localStorage.removeItem('ne_drive_file_id');
+  // FIX: rimosso removeItem del token OAuth (non viene più salvato)
   document.getElementById('gdrive-login-bar').style.display = 'flex';
   document.getElementById('sync-bar').style.display = 'none';
 }
 
-// FIX: gestione token scaduto (errore 401) in syncNow e loadFromDrive
 async function syncNow(){
   if(!gToken) return;
   setSyncStatus('syncing','Salvataggio...');
@@ -460,7 +504,6 @@ async function syncNow(){
         headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
         body: payload
       });
-      // FIX: token scaduto → logout e chiedi di riaccedere
       if(res.status === 401){ gdriveLogout(); setSyncStatus('err','Sessione scaduta, accedi di nuovo'); return; }
     } else {
       const search = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${FILE_NAME}'`, {
@@ -477,19 +520,19 @@ async function syncNow(){
           body: payload
         });
       } else {
-        const meta = await fetch('https://www.googleapis.com/drive/v3/files', {
+        // FIX: creazione file con multipart upload (una sola chiamata)
+        const form = new FormData();
+        form.append('metadata', new Blob([JSON.stringify({name: FILE_NAME, parents:['appDataFolder']})], {type:'application/json'}));
+        form.append('file', new Blob([payload], {type:'application/json'}));
+        const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
           method:'POST',
-          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-          body: JSON.stringify({name: FILE_NAME, parents:['appDataFolder']})
+          headers:{'Authorization':'Bearer '+gToken},
+          body: form
         });
-        const mData = await meta.json();
+        if(res.status === 401){ gdriveLogout(); setSyncStatus('err','Sessione scaduta, accedi di nuovo'); return; }
+        const mData = await res.json();
         driveFileId = mData.id;
         localStorage.setItem('ne_drive_file_id', driveFileId);
-        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
-          method:'PATCH',
-          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-          body: payload
-        });
       }
     }
     const now = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
@@ -505,7 +548,6 @@ async function loadFromDrive(){
     const res = await fetch(`https://www.googleapis.com/drive/v3/files/${driveFileId}?alt=media`, {
       headers:{'Authorization':'Bearer '+gToken}
     });
-    // FIX: token scaduto
     if(res.status === 401){ gdriveLogout(); setSyncStatus('err','Sessione scaduta, accedi di nuovo'); return; }
     const data = await res.json();
     if(data.dati) dati = data.dati;
@@ -519,14 +561,11 @@ async function loadFromDrive(){
   }
 }
 
-// Ripristino token al caricamento pagina
+// FIX: al caricamento pagina non si ripristina più il token OAuth dal localStorage
+// Si mostra solo la barra di login; l'utente dovrà riaccedere (token scade ogni ora)
 window.addEventListener('load', () => {
-  const saved = localStorage.getItem('ne_gdrive_token');
-  if(saved){
-    gToken = saved;
-    document.getElementById('gdrive-login-bar').style.display = 'none';
-    document.getElementById('sync-bar').style.display = 'flex';
-    setSyncStatus('ok','Google Drive collegato');
-    if(driveFileId) loadFromDrive();
+  if(driveFileId){
+    // driveFileId è salvato, ma serve un nuovo login per avere il token fresco
+    setSyncStatus('ok','Drive configurato — accedi per sincronizzare');
   }
 });
